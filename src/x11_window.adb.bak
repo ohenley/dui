@@ -1,0 +1,349 @@
+with system;
+with interfaces.c;
+with Interfaces.C.Strings;
+with ada.text_io; use ada.text_io;
+
+with namespaces; use namespaces;
+
+with Ada.Unchecked_Conversion;
+
+package body x11_window is
+
+    package ic renames interfaces.c;
+    package ics renames Interfaces.C.Strings;
+
+    type display_access is new system.address; -- Display*
+    type window is new ic.unsigned_long;    -- typedef to XID to unsigned long
+    type xevent is array (1..24) of ic.long; -- union with wider being: long pad[24];
+    type xevent_access is access all xevent;
+
+
+    
+    type format is (XYBitmap, XYPixmap, ZPixmap);
+    for format use (XYBitmap => 0, XYPixmap => 1, ZPixmap => 2);
+
+
+    type graphic_context is new system.address;
+    type xgcvalues_access is new system.address;
+    type visual_access is new system.address;
+    type screen_access is new system.address;
+    type colormap is new ic.unsigned_long;
+    type drawable is new ic.unsigned_long;
+
+    type u8 is mod 2**8;
+    for u8'Size use 8;
+
+    type u8_array is array (natural range <>) of u8;
+    type u8_array_access is access all u8_array;
+    type xpointer is new u8_array_access;
+
+    ExposureMask : constant ic.unsigned_long := 32768;
+    KeyPressMask : constant ic.unsigned_long := 1;
+
+    type bool is new boolean;
+    for bool'size use 8;
+
+    type xwindow_attributes is record
+        x : ic.int;
+        y : ic.int;
+        width : ic.int;
+        height : ic.int;
+        border_width : ic.int;
+        depth : ic.int;
+        visual : visual_access;
+        root : window;
+        class : ic.int;
+        bit_gravity : ic.int;
+        win_gravity : ic.int;
+        backing_store : ic.int;
+        backing_planes : ic.unsigned_long;
+        backing_pixel : ic.unsigned_long;
+        save_under : bool;
+        color_map : colormap;
+        map_installed : bool;
+        map_state : ic.int;
+        all_event_masks : ic.long;
+        your_event_mask : ic.long;
+        do_not_propagate_mask : ic.long;
+        override_redirect : bool;
+        screen : screen_access;
+    end record;
+    type xwindow_attributes_access is access all xwindow_attributes;
+
+    type ximage is record
+        width       : ic.int;
+        height      : ic.int;
+        xoffset     : ic.int; -- number of pixels offset in X direction
+        format      : ic.int;
+        data        : u8_array_access;
+        byte_order  : ic.int;
+        bitmap_unit : ic.int;
+        bitmap_bit_order : ic.int;
+	    bitmap_pad : ic.int;			
+	    depth      : ic.int;
+	    bytes_per_line : ic.int;		
+	    bits_per_pixel : ic.int;		   -- bits per pixel (ZPixmap)
+	    red_mask       : ic.unsigned_long; -- bits in z arrangementx_create_image
+	    obdata         : xpointer;
+    end record;
+    type ximage_access is access all ximage;
+
+    function x_open_display (display_name : ics.chars_ptr) return display_access with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XOpenDisplay";
+
+    function x_default_screen (display : display_access) return ic.int with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XDefaultScreen";
+
+    function x_default_root_window (display : display_access) return window with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XDefaultRootWindow";
+
+    function x_black_pixel (display : display_access; screen_number : ic.int) return ic.unsigned_long with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XBlackPixel";
+
+    function x_create_simple_window (display : display_access;
+                                    parent : window;
+                                    x : ic.int;
+                                    y : ic.int;
+                                    width : ic.unsigned;
+                                    height : ic.unsigned;
+                                    border_width : ic.unsigned;
+                                    border : ic.unsigned_long;
+                                    background : ic.unsigned_long) return window with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XCreateSimpleWindow";
+
+    procedure x_select_input (display : display_access; w : window; event_mash : ic.long) with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XSelectInput";
+
+    procedure x_map_window (display : display_access; w : window) with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XMapWindow";
+
+    function x_create_graphic_context (display : display_access; w : window; value_mask : ic.unsigned_long; values : xgcvalues_access) return graphic_context with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XCreateGC";
+
+    procedure x_set_foreground (display : display_access; gc : graphic_context; foreground : ic.unsigned_long) with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XSetForeground";
+    
+    function x_create_image (display : display_access; 
+                             visual : visual_access;
+                             depth  : ic.unsigned;
+                             format : ic.int;
+                             offsert : ic.int;
+                             data : u8_array_access;
+                             width : ic.unsigned;
+                             height : ic.unsigned;
+                             bitmap_pad : ic.int;
+                             bytes_per_line : ic.int) return ximage_access with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XCreateImage";
+
+    function x_put_image (display  : display_access;
+                           d : drawable;
+                           gc : graphic_context;
+                           img : ximage_access;
+                           src_x : ic.int;
+                           src_y : ic.int;
+                           dest_x : ic.int;
+                           dest_y : ic.int;
+                           width  : ic.unsigned;
+                           height : ic.unsigned) return ic.int with
+        Import        => True,
+        Convention    => C,
+        External_Name => "XPutImage";
+
+    procedure x_draw_point (display : display_access; w : window; gc : graphic_context; x : ic.int; y : ic.int) with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XDrawPoint";
+
+    procedure x_next_event (display : display_access;  event_return : xevent_access) with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XNextEvent";
+
+    procedure x_send_event (display : display_access; w : window; propagate : bool; event_mask : ic.long; event_send : xevent_access) with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XSendEvent";
+
+    function x_sync (display : display_access; discard : bool) return ic.int with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XSync";
+
+
+    procedure x_clear_window (display : display_access; w : window) with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XClearWindow";
+
+
+    function x_get_window_attributes (display : display_access; w : window; window_attributes_return : xwindow_attributes_access) return ic.int with
+        Import        => True,
+        Convention    => c,
+        External_Name => "XGetWindowAttributes";
+
+    procedure open_window (window_width  : natural;
+                           window_height : natural;
+                           fps           : Integer;
+                           image         : aliased in out graphic.image; 
+                           cb            : Update_Image_Buffer) is
+        use ic;
+        dpy : display_access := x_open_display(ics.null_ptr);
+        screen_num : ic.int := x_default_screen (dpy);
+        rwin : window := x_default_root_window (dpy);
+        win : window := x_create_simple_window (dpy, rwin, 0, 0, ic.unsigned (window_width), ic.unsigned (window_height), 1, x_black_pixel (dpy, screen_num), x_black_pixel (dpy, screen_num));
+        event : aliased xevent;
+        gc : graphic_context;
+        mask : ic.unsigned_long := KeyPressMask or ExposureMask;
+        quit : boolean := false;
+        res : ic.int;
+        attributes : aliased xwindow_attributes;
+
+        --ximg : aliased ximage;
+        ximg_acc : ximage_access;-- := ximg'Unchecked_Access;
+
+        --data : aliased u8_array (1 .. image'size) with Address => Image'address;
+        --data : aliased u8_array := (others=>0);
+        --data_acc : u8_array_access := data'Unchecked_Access;
+        --img_acc : g.image_access := image'Unchecked_Access;
+
+        function imageo_data is new Ada.Unchecked_Conversion 
+            (Source => graphic.image, Target => u8_array);
+
+
+        data : aliased u8_array (1..image'size) := imageo_data (image);
+
+        --data_acc : u8_array_access := data'Unchecked_Access;
+
+        procedure draw_pixel (x : ic.int; y : ic.int; color : ic.unsigned_long)  is
+        begin
+            x_set_foreground (dpy, gc, color);
+            x_draw_point (dpy, win, gc, x, y);
+        end;
+
+        function get_r (r : float) return ic.unsigned_long is
+            r_ul : unsigned_long := unsigned_long (255.0 * r);
+        begin
+            return r_ul * 16#1#e+4;
+        end;
+
+        function get_g (g : float) return ic.unsigned_long is
+            g_ul : unsigned_long := unsigned_long (255.0 * g);
+        begin
+            return g_ul * 16#1#e+2;
+        end;
+
+        function get_b (b : float) return ic.unsigned_long is
+            b_ul : unsigned_long := unsigned_long (255.0 * b);
+        begin
+            return b_ul * 16#1#e+0;
+        end;
+
+    begin
+        aio.Put_Line (data'Unchecked_Access'image);
+        --aio.Put_Line (data_acc'image);
+        --aio.Put_line (data_acc'image);
+
+
+        res := x_get_window_attributes (dpy, win, attributes'Unchecked_Access);
+        aio.Put_Line (attributes'image);
+
+
+        x_map_window (dpy, win);
+        x_select_input (dpy, win, ic.long(mask));
+
+        gc := x_create_graphic_context (dpy, rwin, 0, xgcvalues_access(system.Null_Address));
+
+        aio.Put_Line ("before x_create_image");
+        ximg_acc := x_create_image (dpy,
+                                    attributes.visual,
+                                    ic.unsigned (attributes.depth),
+                                    format'Enum_Rep (ZPixmap),
+                                    0,
+                                    data_acc,
+                                    ic.unsigned (attributes.width),
+                                    ic.unsigned (attributes.height),
+                                    32,
+                                    0);
+        aio.Put_Line (ximg_acc.all'image);
+
+        -- res := x_sync (dpy, false);
+
+        -- aio.Put_Line ("before x_put_image");
+        --    res := x_put_image (dpy, 
+        --                  drawable (win), 
+        --                  gc, 
+        --                  ximg_acc, 
+        --                  0, 0, 
+        --                  0, 0, 
+        --                  ic.unsigned (attributes.width), 
+        --                  ic.unsigned (attributes.height));
+        -- aio.Put_Line (res'image);
+
+        --res := x_sync (dpy, false);
+
+        while not quit loop
+
+            --aio.Put_Line ("looping");
+
+            
+            --Put_Line (attributes.width'image);
+            --Put_Line (attributes.height'image);
+            
+            x_next_event (dpy, event'unchecked_access);
+            --delay Duration(1.0 / Float(fps));
+            
+            --x_clear_window (dpy, win);
+
+            --aio.Put_Line ("before cb");
+            
+            cb (image, Integer(attributes.width), Integer(attributes.height));
+
+            
+           
+            
+            -- for i in image'range (1) loop
+            --     for j in image'range (2) loop
+            --         declare
+            --             r, g, b : ic.unsigned_long := 0;
+            --             c : ic.unsigned_long;
+            --         begin
+            --             r := get_r (float(image(i, j).r));
+            --             g := get_g (float(image(i, j).g));
+            --             b := get_b (float(image(i, j).b));
+  
+            --             c := r or g or b; 
+            --             draw_pixel (ic.int(i), ic.int(j), c);
+            --         end;
+            --     end loop;
+            -- end loop;
+
+            x_send_event (display    => dpy, 
+                          w          => win, 
+                          propagate  => True, 
+                          event_mask => 1,
+                          event_send => event'unchecked_access);
+            --aio.Put_Line ("after x_send_event");
+        end loop;
+    end;
+
+end x11_window; 
