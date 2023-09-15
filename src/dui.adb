@@ -12,6 +12,8 @@ with widget;
 
 with namespaces; use namespaces;
 
+with mouse;
+
 package body dui is
 
     procedure add_to_lOt (Widget : Any_Acc; Parent : Any_Acc) is
@@ -258,6 +260,9 @@ package body dui is
         -- Put_Line ("Elapsed time (whole dui): "
         --    & Duration'Image (To_Duration (Elapsed_Time))
         --    & " seconds");
+    exception
+        when others =>
+            Put_Line ("Unknown error");
     end;
 begin
     main_widget := new w.Instance' (Controlled with

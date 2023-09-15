@@ -1,4 +1,4 @@
-with Ada.Containers.Multiway_Trees;
+with Ada.Containers.Bounded_Multiway_Trees;
 with Ada.Strings.Unbounded;
 
 with graphic;
@@ -9,8 +9,8 @@ package dui is
 
     pragma Elaborate_Body;
 
-    package Layout_Object_Tree is new Ada.Containers.Multiway_Trees (Any_Acc);    
-    LOT : Layout_Object_Tree.tree;
+    package Layout_Object_Tree is new Ada.Containers.Bounded_Multiway_Trees (Any_Acc);    
+    LOT : Layout_Object_Tree.tree (1000);
     LOT_Root : Layout_Object_Tree.cursor := LOT.Root;
     main_widget : Widget.Any_Acc;
 

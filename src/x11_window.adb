@@ -116,10 +116,10 @@ package body x11_window is
         X.Xlib.XSelectInput (Display, Win, ic.Long (ic.Unsigned (X.ButtonPressMask) or X.ButtonReleaseMask));
 
         loop
-
+            
             while X.Xlib.XPending (display) > 0 loop
                 X.Xlib.XNextEvent (Display, Report'Access);
-                Put_Line (Report.xbutton'image);
+                --Put_Line (Report.xbutton'image);
             end loop;
  
             res := X.Xlib.XGetWindowAttributes (Display, Win, Wa'Unchecked_Access);
