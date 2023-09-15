@@ -8,7 +8,6 @@ with Ada.Strings.Unbounded;
 
 with Ada.Finalization; use Ada.Finalization;
 
-
 with font;
 
 with widget; use widget;
@@ -75,7 +74,7 @@ procedure Main is
 
     orig_img : w.Any_Acc := wi.Create (id           => "orig_img",
                                        parent       => images,
-                                       abs_filename => "/home/henley/repos/dui/data/Ada_Lovelace_photo.qoi",
+                                       abs_filename => "data/Ada_Lovelace_photo.qoi",
                                        self_flex    => (--expand_w => (pixel, 654),
                                                         expand_h => (behavior => max),
                                                         others   => <>),

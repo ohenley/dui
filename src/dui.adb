@@ -267,5 +267,5 @@ begin
                                     others => <>);
     LOT.Append_Child (Parent => LOT_Root, New_Item => main_widget);
     LOT_Root := Layout_Object_Tree.First_Child (LOT_Root);
-    font.font_1_img := g.Load_QOI ("./data/font_1.qoi");
+    font.font_1_img := g.Load_QOI ("data/font_1.qoi");
 end dui;
