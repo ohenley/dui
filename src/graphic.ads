@@ -13,7 +13,7 @@ package graphic is
     type color is record
         r, g, b, a : color_val := 0.0;
     end record;
-
+-- red and blue are reversed
     red_1  : color := (0.6, 0.1, 0.1, 0.0);
     red_2  : color := (0.6, 0.2, 0.2, 0.0);
     red_3  : color := (0.6, 0.3, 0.3, 0.0);

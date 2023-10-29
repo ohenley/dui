@@ -17,7 +17,7 @@ package body Widget.Button is
                               id            => +id,
                               self_flex     => self_flex,
                               child_flex    => child_flex,
-                              bgd           => graphic.red_1,
+                              bgd           => bgd,
                               others        => <>);
         dui.add_to_LOT (This, Parent);
 
@@ -29,7 +29,7 @@ package body Widget.Button is
                                                                others   => <>),
                                                 child_flex => (dir    => left_right,
                                                                others => <>),
-                                                bgd        => graphic.red_1);
+                                                bgd        => bgd);--this variable affects the color of the button
         
         return This;
     end;
