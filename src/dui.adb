@@ -14,7 +14,7 @@ with namespaces; use namespaces;
 
 package body dui is
 
-    procedure add_to_lOt (Widget : Any_Acc; Parent : Any_Acc) is
+    procedure add_to_LOT (Widget : Any_Acc; Parent : Any_Acc) is
     begin
         dui.LOT.Append_Child (dui.Layout_Object_Tree.Find (dui.LOT, Parent), Widget);
     end;

@@ -98,15 +98,16 @@ procedure Main is
     --                                                    expand_h => (behavior => max),
     --                                                    others   => <>),
     --                                   bgd          => get_color);
-    widget_list : w.Any_Acc := wt.Create (id            => "widget_list",
-                                       parent        => images,
-                                       text          => "Widget List",
-                                       magnification => 1,
-                                       self_flex     => (
-                                                         expand_w => (pixel, 300),
-                                                         expand_h => (behavior => max),
-                                                         others   => <>),
-                                       bgd           => g.light_grey);
+    tools   : w.Any_Acc := wt.Create (id         => "tools",
+                                      parent     => images,
+                                      text       => "Tools",
+                                      self_flex  => (expand_w => (pixel, 200),
+                                                     expand_h => (behavior => max),
+                                                     others   => <>),
+                                      child_flex => (dir    => top_bottom,
+                                                     others => <>),
+                                      bgd        => get_color);
+    
     gui_area : w.Any_Acc := wt.Create (id            => "gui_area",--filt_img : w.Any_Acc := wt.Create (id            => "filt_img",
                                        parent        => images,
                                        text          => "GUI Work Area",--"Filtered",
@@ -122,16 +123,15 @@ procedure Main is
                                                      others   => <>),
                                       bgd        => get_color);
 
-    tools   : w.Any_Acc := wt.Create (id         => "tools",
-                                      parent     => images,
-                                      text       => "Tools",
-                                      self_flex  => (expand_w => (pixel, 200),
-                                                     expand_h => (behavior => max),
-                                                     others   => <>),
-                                      child_flex => (dir    => top_bottom,
-                                                     others => <>),
-                                      bgd        => get_color);
-
+    widget_list : w.Any_Acc := wt.Create (id            => "widget_list",
+                                       parent        => images,
+                                       text          => "Widget List",
+                                       magnification => 1,
+                                       self_flex     => (
+                                                         expand_w => (pixel, 300),
+                                                         expand_h => (behavior => max),
+                                                         others   => <>),
+                                       bgd           => g.light_grey);
     add_contain : w.Any_Acc := wb.Create (id         => "add_contain",--compute : w.Any_Acc := wb.Create (id         => "compute_button",
                                       parent     => tools,
                                       text       => "Add Container",--"Compute",

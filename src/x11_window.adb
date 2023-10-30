@@ -122,7 +122,7 @@ package body x11_window is
 
             while X.Xlib.XPending (display) > 0 loop
                 X.Xlib.XNextEvent (Display, Report'Access);
-                for i in dui.Layout_Object_Tree.Iterate_Children (dui.LOT, LOT.) loop
+                for i in dui.Layout_Object_Tree.Iterate_Children (dui.LOT, LOT_Root) loop
                     Put_Line(LOT(i).kind'Image);
                     if LOT(i).kind = Button_Widget then
                         if Standard.Natural(Report.xbutton.xx) > dui.LOT(i).x and Standard.Integer(Report.xbutton.xx) <  dui.LOT(i).x + dui.LOT(i).w then 
