@@ -2,12 +2,15 @@ with ada.Text_IO; use ada.Text_IO;
 with Interfaces.C.Strings;
 with Interfaces;
 with system;
+with dui; use dui;
 
 with Ada.Real_Time; use Ada.Real_Time;
 
 with X;
 with X.Xlib;
 with X.Strings;
+with Widget; use Widget;
+with widget.Button;
 
 with namespaces; use namespaces;
 
@@ -119,7 +122,18 @@ package body x11_window is
 
             while X.Xlib.XPending (display) > 0 loop
                 X.Xlib.XNextEvent (Display, Report'Access);
-                Put_Line (Report.xbutton'image);
+                for i in dui.Layout_Object_Tree.Iterate_Children (dui.LOT, LOT.) loop
+                    Put_Line(LOT(i).kind'Image);
+                    if LOT(i).kind = Button_Widget then
+                        if Standard.Natural(Report.xbutton.xx) > dui.LOT(i).x and Standard.Integer(Report.xbutton.xx) <  dui.LOT(i).x + dui.LOT(i).w then 
+                            if Standard.Natural(Report.xbutton.y) > dui.LOT(i).y and Standard.Integer(Report.xbutton.y) <  dui.LOT(i).y + dui.LOT(i).h then
+                                Put_Line("Button Clicked!");
+                                --dui.LOT(i).Event(Click_In);
+                            end if;
+                        end if;
+                    end if;
+                end loop;
+                --Put_Line (Report.xbutton'image);
             end loop;
  
             res := X.Xlib.XGetWindowAttributes (Display, Win, Wa'Unchecked_Access);

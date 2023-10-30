@@ -47,6 +47,7 @@ package Widget is
    default_flex : flex_t := (others => <>);
 
    type Event_Kind is (Click_In, Click_Out, Hover);
+   type Widget_Kind is (Normal_Widget, Button_Widget);
 
    type Instance is new Ada.Finalization.Controlled with 
    record
@@ -56,6 +57,7 @@ package Widget is
       self_flex  : flex_t;
       child_flex : flex_t;
       bgd        : graphic.color := (0.3, 0.3, 0.3, 0.0);
+      kind       : Widget_Kind;
    end record;
    subtype Class is Instance'Class;
 
