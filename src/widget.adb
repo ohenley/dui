@@ -14,6 +14,7 @@ package body Widget is
                               self_flex  => self_flex,
                               child_flex => child_flex,
                               bgd        => bgd,
+                              kind       => Normal_Widget,
                               others     => <>);
         dui.add_to_LOT (This, Parent);
         return This;

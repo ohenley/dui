@@ -1,4 +1,4 @@
---with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Text_IO; use Ada.Text_IO;
 with dui;
 
 with namespaces; use namespaces;
@@ -18,6 +18,7 @@ package body Widget.Button is
                               self_flex     => self_flex,
                               child_flex    => child_flex,
                               bgd           => bgd,
+                              kind => Button_Widget,
                               others        => <>);
         dui.add_to_LOT (This, Parent);
 
@@ -34,10 +35,10 @@ package body Widget.Button is
         return This;
     end;
 
-    overriding 
+    overriding
     procedure Event (This : in out Instance; Evt : Event_Kind) is
     begin
-        null;
+        Put_Line("==================== --> Button Clicked!! <-- ======================");
     end Event;
 
     overriding 

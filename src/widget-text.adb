@@ -21,6 +21,7 @@ package body Widget.Text is
                               self_flex  => self_flex,
                               child_flex => child_flex,
                               bgd        => bgd,
+                              kind => Button_Widget,
                               others     => <>);
         dui.add_to_LOT (This, Parent);
         return This;
