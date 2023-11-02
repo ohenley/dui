@@ -122,18 +122,7 @@ package body x11_window is
 
             while X.Xlib.XPending (display) > 0 loop
                 X.Xlib.XNextEvent (Display, Report'Access);
-                for i in dui.Layout_Object_Tree.Iterate_Children (dui.LOT, LOT_Root) loop
-                    Put_Line(LOT(i).kind'Image);
-                    if LOT(i).kind = Button_Widget then
-                        if Standard.Natural(Report.xbutton.xx) > dui.LOT(i).x and Standard.Integer(Report.xbutton.xx) <  dui.LOT(i).x + dui.LOT(i).w then 
-                            if Standard.Natural(Report.xbutton.y) > dui.LOT(i).y and Standard.Integer(Report.xbutton.y) <  dui.LOT(i).y + dui.LOT(i).h then
-                                Put_Line("Button Clicked!");
-                                --dui.LOT(i).Event(Click_In);
-                            end if;
-                        end if;
-                    end if;
-                end loop;
-                --Put_Line (Report.xbutton'image);
+                dui.handle_click_event(Report.xbutton.xx, Report.xbutton.y);
             end loop;
  
             res := X.Xlib.XGetWindowAttributes (Display, Win, Wa'Unchecked_Access);

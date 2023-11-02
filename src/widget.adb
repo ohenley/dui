@@ -20,6 +20,11 @@ package body Widget is
         return This;
     end;
 
+    function Is_In_Bound (This : in out Instance; x_Input, y_Input : Natural) is
+    begin
+        return Boolean;
+    end;
+
     procedure Event (This : in out Instance; Evt : Event_Kind) is
     begin
         null;
@@ -30,5 +35,10 @@ package body Widget is
     begin
         dui.draw_rect (img, this.x+1, this.y+1, this.w, this.h, this.bgd);
     end Draw;
+
+    procedure Who_I_Am (This : in out Instance) is
+    begin
+    Put_Line("I am a widget");
+    end;
 
 end Widget;

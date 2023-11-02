@@ -41,5 +41,7 @@ package dui is
     procedure render (target : in out graphic.image;
                       window_width  : natural;
                       window_height : natural);
+    
+    procedure handle_click_event (x_Input, y_Input : Natural);
 
 end;

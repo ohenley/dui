@@ -60,4 +60,9 @@ package body Widget.Image is
         --    & " seconds");
     end;
 
+    overriding procedure Who_I_Am (This : in out Instance) is 
+    begin
+    Put_Line("I am an image widget");
+    end;
+
 end Widget.Image;

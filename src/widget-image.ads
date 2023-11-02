@@ -36,6 +36,7 @@ package Widget.Image is
 
     overriding procedure Event (This : in out Instance; Evt : Event_Kind);
     overriding procedure Draw (This : in out Instance; img : in out graphic.image);
+    overriding procedure Who_I_Am (This : in out Instance);
 
     -- overriding procedure Load (This: Instance);
 
