@@ -298,14 +298,14 @@ package body dui is
 
     
 
-    procedure handle_click_event (x_Input, y_Input : Natural) is
+    procedure handle_click_event (x_Input: Natural; y_Input : Natural) is
 
     procedure click_event
        (c : Layout_Object_Tree.Cursor)
     is
     begin
-        if LOT (i).Is_In_Bound (x_Input, y_Input) then
-            LOT (i).Who_I_Am;
+        if Layout_Object_Tree.Element(c).Is_In_Bound (x_Input, y_Input) then
+            Layout_Object_Tree.Element(c).Who_I_Am;
         end if;
     end click_event;
 
