@@ -91,13 +91,7 @@ procedure Main is
                                       bgd        => g.black);--get_color);
                                       
 
-    --orig_img : w.Any_Acc := wi.Create (id           => "orig_img",
-    --                                   parent       => images,
-    --                                   abs_filename => "data/Ada_Lovelace_photo.qoi",
-    --                                   self_flex    => (--expand_w => (pixel, 654),
-    --                                                    expand_h => (behavior => max),
-    --                                                    others   => <>),
-    --                                   bgd          => get_color);
+    
     tools   : w.Any_Acc := wt.Create (id         => "tools",
                                       parent     => images,
                                       text       => "Tools",
@@ -115,6 +109,14 @@ procedure Main is
                                        self_flex     => (expand_h => (behavior => max),
                                                          others   => <>),
                                        bgd           => g.white);--get_color);
+    
+    orig_img : w.Any_Acc := wi.Create (id           => "orig_img",
+                                       parent       => gui_area,
+                                       abs_filename => "data/Ada_Lovelace_photo.qoi",
+                                       self_flex    => (expand_w => (behavior => max),
+                                                        expand_h => (behavior => max),
+                                                        others   => <>),
+                                       bgd          => get_color);
 
     img_sep  : w.Any_Acc := w.Create (id         => "img_sep",
                                       parent     => images,

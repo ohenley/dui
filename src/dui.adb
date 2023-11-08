@@ -1,15 +1,15 @@
+with Ada.Finalization; use Ada.Finalization;
+with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with Ada.Real_Time; use Ada.Real_Time;
-
-with Ada.Finalization; use Ada.Finalization;
+with font;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with importer;
-with font;
-
-with Widget;
 
 with namespaces; use namespaces;
+
+with Widget;
 
 package body dui is
 
@@ -152,6 +152,7 @@ package body dui is
                     total_portion      : Natural := 0;
                     nbr_max            : Natural := 0;
                 begin
+                    -- FOR LOOP A, EXPANSION FOR LOOP
                     for i in Layout_Object_Tree.Iterate_Children (LOT, C) loop
                         if child_row then
                             expand_w := LOT (i).self_flex.expand_w;
@@ -198,6 +199,7 @@ package body dui is
                         end if;
                     end loop;
 
+                    -- FOR LOOP B, Calculate Position FOR LOOP
                     for i in Layout_Object_Tree.Iterate_Children (LOT, C) loop
                         LOT (i).x := cx;
                         LOT (i).y := cy;
@@ -236,7 +238,9 @@ package body dui is
                                 when max =>
                                     LOT (i).h := e.h;
                             end case;
-                            cx := cx + LOT (i).w;
+                            
+                            cx := cx + LOT(i).w;
+
                         elsif child_column then
                             case expand_h.behavior
                             is -- update h in column context
@@ -270,7 +274,10 @@ package body dui is
                                 when max =>
                                     LOT (i).w := e.w;
                             end case;
-                            cy := cy + LOT (i).h;
+
+                            cy := cy + LOT(i).h;
+                            
+                            
                         elsif child_depth then
                             null;
                         end if;
