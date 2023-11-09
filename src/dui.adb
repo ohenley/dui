@@ -201,8 +201,16 @@ package body dui is
 
                     -- FOR LOOP B, Calculate Position FOR LOOP
                     for i in Layout_Object_Tree.Iterate_Children (LOT, C) loop
-                        LOT (i).x := cx;
-                        LOT (i).y := cy;
+                        if e.child_flex.dir = right_left then
+                            LOT(i).x := cw - cx - LOT(i).w;
+                            LOT(i).y := cy;
+                        elsif e.child_flex.dir = bottom_top then
+                            LOT(i).y := ch - cy - LOT(i).h;
+                            LOT(i).x := cx;
+                        else
+                            LOT (i).x := cx;
+                            LOT (i).y := cy;
+                        end if;
                         expand_w  := LOT (i).self_flex.expand_w;
                         expand_h  := LOT (i).self_flex.expand_h;
                         if child_row then
